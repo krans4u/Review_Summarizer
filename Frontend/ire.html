@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+<title>Bar Chart</title>
+<script src="./Chart.js"></script>
+<script type="text/javascript" src="./jquery-1.11.0.js"></script>
+
+<meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
+<style>
+canvas{
+}
+.heading{
+	font-weight:bold;
+}
+body
+{
+background-color:#FFEFD5;
+}
+img
+{
+margin-left:1060px;
+}
+.c1
+{
+float:right;
+}
+</style>
+</head>
+<body>
+
+
+
+<table>
+<tr>
+<td>
+  Enter Product name: </td><td><input type="search" name="googlesearch" id="prod"></td>
+ </tr>
+<tr>
+<td></td>
+<td>
+ <input type="submit" onclick="myfunction()" value="Summarize">
+</td>
+
+</tr>
+</table>
+<div class="c1"><img src="confused-outlook.jpg" height="200" width="200"></div>
+<canvas id="canvas" height="450" width="700"></canvas>
+
+
+<script>
+
+function myfunction(){
+var prod = document.getElementById('prod').value;
+var pre = "./";
+var post = ".json";
+var url = pre+prod+post;
+alert(url);
+$.get(url)
+    .done(function() {
+$.getJSON(pre+prod+post, function(data) {
+	    
+// data is a JavaScript object now. Handle it as such
+alert("here");
+var barChartData = {
+labels : [],
+datasets : [
+{
+fillColor : "rgba(220,220,220,0.5)",
+strokeColor : "rgba(220,220,220,1)",
+data : []
+},
+{
+fillColor : "rgba(151,187,205,0.5)",
+strokeColor : "rgba(151,187,205,1)",
+data : []
+}
+]
+
+}
+$("#reviews").html("");
+//var s = '{"Picture Quality":{"positive":100,"negative":52},"Size":{"positive":150,"negative":100}}';
+for (var v in data)
+{
+	barChartData.labels.push(v);
+	barChartData.datasets[0].data.push(data[v].positive);
+	barChartData.datasets[1].data.push(data[v].negative);
+	$("#reviews").append('<div id="'+v+'">'+'<div class="heading">'+v+'</div>'+"<br/>"+'</div>');
+	if(data[v].posr1!=null)
+		$("#"+v).append(data[v].posr1+"<br/>");
+	if(data[v].posr2!=null)
+		$("#"+v).append(data[v].posr2+"<br/>");
+	if(data[v].negr1!=null)
+		$("#"+v).append(data[v].negr1+"<br/>");
+	if(data[v].negr2!=null)
+		$("#"+v).append(data[v].negr2+"<br/>");
+	$("#"+v).append("<br/>");
+	
+/*	if(data.hasOwnProperty(v))
+	{
+		alert("Product Feature: " + v);
+		
+	}	
+*/
+}
+var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData);
+
+
+});
+}).fail(function() {
+alert("product: " + url);
+})
+
+}
+
+
+</script>
+<div id="reviews"></div>
+</body>
+</html>
+

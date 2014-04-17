@@ -1,0 +1,284 @@
+<!doctype html>
+<html>
+<head>
+<title>Bar Chart</title>
+<script src="./Chart.js"></script>
+<script type="text/javascript" src="./jquery-1.11.0.js"></script>
+
+<meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
+<style>
+body{
+font-family:'Myriad Pro',Myriad,Calibri,'Gill Sans','Verdana','Helvetica','Arial';
+background-color:#c0c0c0;
+margin:0px;
+}
+canvas{
+}
+.heading{
+	font-weight:bold;
+	display:block;
+}
+.items{
+float:left;
+margin:50px;
+}
+.odd{
+background-color:#eeeeee;
+padding:5px;
+}
+.even{
+background-color:#ddddff;
+padding:5px;
+}
+#sidebar-nav{
+	text-decoration:none;
+	margin-top:100px;
+	margin-left:0px;
+}
+.item_head{
+	text-align:center;
+	font-size:24pt;
+}
+.menu_items{
+	background-color:#ddddff;
+	display:block;
+padding : 10px;
+width:130px;
+height:30px;
+text-decoration:none;
+font-size:18pt;
+	
+}
+img{
+	border:2px solid #000000;
+	
+}
+ a{
+margin:0px;
+text-decoration:none;
+}
+
+.menu_items:hover{
+	background-color:#AAAACC;
+	display:block;
+color:#FFFFFF;
+	
+}
+.header{
+
+font-size:36pt;
+text-align:center;
+background-color:#ddddff;
+color:#0000ef;
+width:100%;
+margin:0px;
+position:fixed;
+}
+
+</style>
+</head>
+<script>
+$(document).ready(function()
+{
+	$(".main").hide();
+	load_items("Mobiles");
+	load_items("Tablets");
+	load_items("Laptops");
+	load_items("Books");
+	load_items("Cameras");
+	func("Landing");
+});
+function load_items(categories){
+	var basic_categories = categories;
+	categories = "./json/"+categories;
+	//alert(categories);
+	$.ajax({
+	url:'getfiles.php',
+	type:'POST',
+	cache:false,
+	//dataType:'json',
+	data:{path:categories},
+	success: function(response){
+		//var a = $.parseJSON(response);
+		//var b = a['output'];
+		//alert(response);
+		var temp = categories.split("/");
+		var catg = temp[2];
+		var img = "./images/"+catg+"/";
+		response=response.split(',');
+		var ct=0;
+		for (var i = 0 ; i < response.length-1; i++)
+		{
+			var prod = response[i];	
+			var name=prod.split('.');
+			var img_l = img + name[0] + ".jpeg";
+			$("#"+basic_categories+"_items")
+				.append("<div class='items' style='display:inline;'>"+"<a href='javascript:myfunction("+"\""+ name[0] + "\"" + ","+ "\"" + catg + "\"" +")'>" + "<img src='" + img_l + "' />" +"<br/>"+name[0]+"</a>"+"</div>");
+			ct+=1;
+			if(ct==3)
+			{
+			
+			}
+		}	
+	}
+	});
+}
+function myfunction(prod,categories){
+	var post = ".json";
+	var url = "./"+"json/"+categories+"/"+prod+post;
+	//alert(url);
+	$.get(url)
+		.done(function() {
+				$.getJSON(url, function(data) {
+
+					// data is a JavaScript object now. Handle it as such
+					//alert("here");
+					var barChartData = {
+					labels : [],
+					datasets : [
+					{
+						fillColor : "rgba(0,0,255,0.5)",
+						strokeColor : "rgba(0,0,255,0)",
+						data : []
+					},
+					{
+						fillColor : "rgba(255,0,0,0.5)",
+						strokeColor : "rgba(255,0,0,0)",
+						data : []
+					}
+					]
+
+					}
+$("#reviews").html("");
+				//var s = '{"Picture Quality":{"positive":100,"negative":52},"Size":{"positive":150,"negative":100}}';
+var ct=0;
+for (var v in data)
+{
+	//v=v.charAt(0).toUpperCase() + v.slice(1);
+	//v.capitalize();	
+	barChartData.labels.push(v);
+	barChartData.datasets[0].data.push(data[v].positive);
+	barChartData.datasets[1].data.push(data[v].negative);
+	if(ct%2==0)
+	{
+	$("#reviews").append('<div id="'+v+'" class="odd">'+'<div class="heading">'+v+'</div>'+"<br/>"+'</div>');
+	}
+	else
+	{
+	$("#reviews").append('<div id="'+v+'" class="even">'+'<div class="heading">'+v+'</div>'+"<br/>"+'</div>');
+	}
+	if(data[v].posr1!=null || data[v].posr2!=null)
+		$("#"+v).append("<div style='text-decoration:underline'>Positive</div><br/>");
+	if(data[v].posr1!=null)
+		$("#"+v).append(data[v].posr1+"<br/>");
+	if(data[v].posr2!=null)
+		$("#"+v).append(data[v].posr2+"<br/>");
+	if(data[v].negr1!=null || data[v].negr2!=null)
+		$("#"+v).append("<div style='text-decoration:underline'>Negative</div><br/>");
+	if(data[v].negr1!=null)
+		$("#"+v).append(data[v].negr1+"<br/>");
+	if(data[v].negr2!=null)
+		$("#"+v).append(data[v].negr2+"<br/>");
+	$("#"+v).append("<br/>");
+
+	/*	if(data.hasOwnProperty(v))
+		{
+		alert("Product Feature: " + v);
+
+		}	
+	 */
+	ct+=1;
+}
+var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData);
+func("get");
+
+});
+}).fail(function() {
+	alert("product: " + url);
+	})
+
+	
+}
+function func(a)
+{
+	
+	$(".main").hide();
+	$("#"+a).show();
+	//alert(a);
+}
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+</script>
+<body>
+
+	<div class="header">
+	REVIEW SUMMARIZER	
+	<br/>	
+	</div>	
+	<div style="position: fixed; left: 0;  display: block;">
+		<ul id="sidebar-nav" class="nav nav-list">
+		<a  href="javascript:func('Mobiles')" ><li class="menu_items">Mobiles</li></a>
+		<a href="javascript:func('Tablets')"><li class="menu_items">Tablets</li></a>
+		<a href="javascript:func('Laptops')"><li class="menu_items">Laptops</li></a>
+		<a href="javascript:func('Books')"><li class="menu_items">Books</li></a>
+		<a href="javascript:func('Cameras')"><li class="menu_items">Cameras</li></a>
+		
+		</ul>
+	</div>
+	<div>
+	<div class="main"id="get"style="margin-left:200px">
+	<!--	Get Summary: <input type="search" name="googlesearch" id="prod"><br>
+		<input type="submit" onclick="myfunction()">
+		<br />-->
+		<canvas id="canvas" height="600" width="800"style="background-color:white"></canvas>
+		<div id="reviews"></div>
+	</div>
+	<div class="main"id="Mobiles" style="margin-left:200px">
+		<div class="item_head">		
+		Mobiles
+		</div>
+		<div id="Mobiles_items" class="item_list">
+		</div>
+	</div>
+	<div class="main"id="Laptops" style="margin-left:200px">
+		<div class="item_head">				
+		Laptops
+		</div>
+		<div id="Laptops_items"class="item_list" >
+		</div>
+	</div>	
+
+	<div class="main"id="Books" style="margin-left:200px">
+		<div class="item_head">				
+		Books
+		</div>
+		<div id="Books_items"class="item_list">
+		</div>
+	</div>	
+	<div class="main"id="Cameras" style="margin-left:200px">
+		<div class="item_head">				
+		Cameras
+		</div>
+		<div id="Cameras_items"class="item_list">
+		</div>
+	</div>	
+	<div class="main"id="Tablets" style="margin-left:200px">
+		<div class="item_head">				
+		Tablets
+		</div>
+		<div id="Tablets_items"class="item_list">
+		</div>
+	</div>	
+	<!--<div class="main" id="Landing" style="margin-left:200px;color:black">
+		All products are categorized and they can be accessed by a menu at the left side of the page.
+		Customer can decide by looking at the feature based graph and extracts of the reviews written by users themselves.
+		
+	</div>-->
+	</div>	
+	
+
+</body>
+</html>
+
