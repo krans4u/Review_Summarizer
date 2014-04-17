@@ -1,1 +1,0 @@
-ID:integer,TYPE:varchar(50),NAME:varchar(50),LATITUDE:integer,LONGITUDE:integer,COUNTRY:varchar(50),REGION:varchar(50)
