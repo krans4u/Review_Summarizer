@@ -1,0 +1,1 @@
+ID:integer,CODE:varchar(50),NAME:varchar(50),CONTINENT:varchar(50)

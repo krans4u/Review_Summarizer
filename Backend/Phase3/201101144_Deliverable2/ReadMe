@@ -1,0 +1,6 @@
+Execute run.sh
+General SQL parser used
+Note:
+1] orderby keyword should be given in this form, "order by" (without quotes)
+2] groupby keyword should be given in this form, "group by" (without quotes)
+3] In create query run as, "create table table_name(col1 data_type1,col2 data_type2)" (without quotes)

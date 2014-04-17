@@ -1,0 +1,68 @@
+PAGESIZE 10
+NUM_PAGES 1024
+PATH_FOR_DATA ./
+BEGIN
+student
+employee_id,int
+employee_name,string
+END
+BEGIN
+teacher
+employee_id1,int
+employee_name1,string
+END
+BEGIN
+t1
+u,v
+x,y
+END
+BEGIN
+t2
+q,w
+r,t
+END
+BEGIN
+t3
+dsa,asd
+END
+BEGIN
+countrylist
+Sort Order,float
+Common Name,string
+Formal Name,string
+Type,string
+Sub Type,string
+Sovereignty,string
+Capital,string
+Currency Code,string
+Currency Name,string
+Telephone Code,string
+2 Letter Code,string
+3 Letter Code,string
+Number,int
+Country Code,string
+END
+BEGIN
+countrylistb
+Sort Order,float
+Common Name,string
+Formal Name,string
+Type,string
+Sub Type,string
+Sovereignty,string
+Capital,string
+Currency Code,string
+Currency Name,string
+Telephone Code,string
+2 Letter Code,string
+3 Letter Code,string
+Number,int
+Country Code,string
+END
+BEGIN
+countries
+a,string
+b,string
+c,string
+d,string
+END

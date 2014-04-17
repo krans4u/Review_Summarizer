@@ -1,0 +1,18 @@
+PAGESIZE 100
+NUM_PAGES 1
+PATH_FOR_DATA /home/jayesh/Desktop/sem_6/DB/Project/
+BEGIN
+test
+employee_id,int
+employee_name,string
+END
+BEGIN
+test1
+employee_id,int
+employee_name,string
+END
+BEGIN
+test2
+employee_id,int
+employee_name,string
+END
